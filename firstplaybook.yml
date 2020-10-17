@@ -1,0 +1,20 @@
+---
+- hosts: vasu
+  user: ansible
+  become: yes
+  vars:
+      package: httpd
+  tasks: 
+    - name: install httpd package
+      action: yum name={{ package }} state=present
+      notify: restart httpd
+    - name: add packages to list
+      action: yum name={{ item }} state=present
+      with_items:
+              - git
+              - mysql
+              - docker   
+      notify: restart httpd
+  handlers: 
+    - name: restart httpd
+      action: service name={{ package }} state=restarted  
